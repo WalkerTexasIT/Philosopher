@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brminner <brminner@student.s19.be>         +#+  +:+       +#+        */
+/*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 10:51:54 by brminner          #+#    #+#             */
-/*   Updated: 2023/07/06 10:56:47 by brminner         ###   ########.fr       */
+/*   Updated: 2023/07/06 11:41:55 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,21 @@ int	ft_atoi(char *str)
 {
 	int i;
 	int res;
+
+	i = 0;
+	res = 0;
+	while (str[i])
+	{
+		res = res * 10 + str[i] - 48;
+		i++;
+	}
+	return (res);
+}
+
+long long	ft_atol(char *str)
+{
+	int			i;
+	long long	res;
 
 	i = 0;
 	res = 0;
