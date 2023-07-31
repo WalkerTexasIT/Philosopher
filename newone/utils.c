@@ -1,30 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/06 10:49:06 by brminner          #+#    #+#             */
-/*   Updated: 2023/07/31 17:22:52 by brminner         ###   ########.fr       */
+/*   Created: 2023/07/31 21:57:46 by brminner          #+#    #+#             */
+/*   Updated: 2023/07/31 22:02:13 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ft_init(t_philo *philo)
+int	ft_isdigit(char *str)
 {
-	
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] < '0' || str[i] > '9')
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
-int main(int argc, char **argv)
+long long	ft_atol(char *str)
 {
-	t_philo	philo;
+	int		i;
+	long long	nb;
 
-	if (ft_error_handling(argc, argv) == 0)
-		return (0);
-	if (ft_parsing(argc, argv, &philo) == 0)
-		return (0);
-	if (ft_init(&philo) == 0)
-		return (0);
+	i = 0;
+	nb = 0;
+	while (str[i])
+	{
+		nb = nb * 10 + str[i] - '0';
+		i++;
+	}
+	return (nb);
 }
