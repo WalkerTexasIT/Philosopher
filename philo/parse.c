@@ -6,7 +6,7 @@
 /*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 21:56:31 by brminner          #+#    #+#             */
-/*   Updated: 2023/08/03 18:14:10 by brminner         ###   ########.fr       */
+/*   Updated: 2023/08/03 18:45:42 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	ft_error_handling(int argc, char **argv)
 {
 	int	i;
 
-	i = 0;
+	i = 1;
 	if (argc < 5 || argc > 6)
 	{
 		printf("Error: wrong number of arguments\n");
@@ -36,9 +36,10 @@ int	ft_error_handling(int argc, char **argv)
 		}
 		i++;
 	}
+	return (1);
 }
 
-int	ft_parsing(int argc, char **argv, t_input *philo)
+void	ft_parsing(int argc, char **argv, t_input *input)
 {
 	input->nb_philo = ft_atoi(argv[1]);
 	input->time_to_die = ft_atoi(argv[2]);

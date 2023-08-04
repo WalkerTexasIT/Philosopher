@@ -6,13 +6,13 @@
 /*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 21:55:33 by brminner          #+#    #+#             */
-/*   Updated: 2023/08/03 18:17:00 by brminner         ###   ########.fr       */
+/*   Updated: 2023/08/03 19:09:42 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ft_check_death(t_input *input)
+int	ft_check(t_input *input)
 {
 	int		i;
 
@@ -21,10 +21,10 @@ int	ft_check_death(t_input *input)
 		i = -1;
 		while (++i < input->nb_philo)
 		{
-			if (ft_get_time() - input->philo[i].last_meal > input->time_to_die)
+			if (ft_get_time() - input->philo[i].last_eat > input->time_to_die)
 			{
-				ft_print(&input->philo[i], "died");
-				return (NULL);
+				ft_print(&input->philo[i], "dieds");
+				return (0);
 			}
 		}
 		if (input->nb_eat != -1)
@@ -34,10 +34,10 @@ int	ft_check_death(t_input *input)
 				if (input->philo[i].nb_meal < input->nb_eat)
 					break ;
 			if (i == input->nb_philo)
-				return (NULL);
+				return (0);
 		}
 	}
-	return (NULL);
+	return (0);
 }
 
 int	ft_create_threads(t_input *input)
@@ -48,12 +48,13 @@ int	ft_create_threads(t_input *input)
 	while (i < input->nb_philo)
 	{
 		input->philo[i].id = i + 1;
-		input->philo[i].last_meal = 0;
+		input->philo[i].last_eat = 0;
 		input->philo[i].nb_meal = 0;
+		input->philo[i].start = ft_get_time();
 		input->philo[i].print = &input->print;
-		input->philo[i].left_fork = input->forks[i];
-		input->philo[i].right_fork = input->forks[(i + 1) % input->nb_philo];
-		input->philo[i] = &input;
+		input->philo[i].left_fork = &input->forks[i];
+		input->philo[i].right_fork = &input->forks[(i + 1) % input->nb_philo];
+		input->philo[i].input = input;
 		if (pthread_create(&input->philo[i].thread, NULL, ft_routine,
 				&input->philo[i]) != 0)
 			return (0);
@@ -69,10 +70,10 @@ int	ft_init(t_input *input)
 
 	i = 0;
 	input->philo = malloc(sizeof(t_philo) * input->nb_philo);
-	if (!philo->philo)
+	if (!input->philo)
 		return (0);
 	input->forks = malloc(sizeof(pthread_mutex_t) * input->nb_philo);
-	if (!philo->forks)
+	if (!input->forks)
 		return (0);
 	while (i < input->nb_philo)
 	{
@@ -80,6 +81,7 @@ int	ft_init(t_input *input)
 		i++;
 	}
 	pthread_mutex_init(&input->print, NULL);
+	input->dead = 0;
 	return (1);
 }
 
@@ -88,10 +90,12 @@ int	ft_join_threads(t_input *input)
 	int	i;
 
 	i = 0;
+	printf("test\n");
 	while (i < input->nb_philo)
 	{
 		if (pthread_join(input->philo[i].thread, NULL) != 0)
 			return (0);
+		printf("thread %d joined\n", i);
 		i++;
 	}
 	return (1);
@@ -107,6 +111,7 @@ int main(int argc, char **argv)
 	ft_init(&input);
 	ft_create_threads(&input);
 	ft_check(&input);
+	input.dead = 1;
 	ft_join_threads(&input);
 	return (0);
 }
