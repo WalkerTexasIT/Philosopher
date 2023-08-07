@@ -6,7 +6,7 @@
 /*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 13:37:32 by brminner          #+#    #+#             */
-/*   Updated: 2023/08/03 19:08:50 by brminner         ###   ########.fr       */
+/*   Updated: 2023/08/07 15:28:46 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	ft_eat(t_philo *philo)
 	philo->nb_meal++;
 	pthread_mutex_unlock(philo->left_fork);
 	pthread_mutex_unlock(philo->right_fork);
+	philo->last_eat = ft_get_time();
 }
 
 void	ft_sleep(t_philo *philo)
@@ -56,6 +57,7 @@ void	*ft_routine(void *arg)
 			return (NULL);
 		if (philo->input->dead == 1)
 			return (NULL);
+		printf("dead = %d\n", philo->input->dead);
 	}
 	return (NULL);
 }

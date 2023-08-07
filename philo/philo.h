@@ -6,7 +6,7 @@
 /*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 22:16:33 by brminner          #+#    #+#             */
-/*   Updated: 2023/08/03 19:00:38 by brminner         ###   ########.fr       */
+/*   Updated: 2023/08/07 17:11:36 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 typedef struct s_philo
 {
 	int				id;
-	int				last_eat;
+	long long int	last_eat;
 	int				nb_meal;
 	long long int	start;
 	pthread_mutex_t	*left_fork;
@@ -41,6 +41,7 @@ typedef struct s_input {
 	t_philo			*philo;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	print;
+	pthread_t		check;
 	int				dead;
 }				t_input;
 

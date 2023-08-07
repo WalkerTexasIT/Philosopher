@@ -6,16 +6,18 @@
 /*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 21:55:33 by brminner          #+#    #+#             */
-/*   Updated: 2023/08/03 19:09:42 by brminner         ###   ########.fr       */
+/*   Updated: 2023/08/07 17:11:09 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ft_check(t_input *input)
+void	*ft_check(void *arg)
 {
+	t_input	*input;
 	int		i;
 
+	input = (t_input *)arg;
 	while (1)
 	{
 		i = -1;
@@ -23,21 +25,16 @@ int	ft_check(t_input *input)
 		{
 			if (ft_get_time() - input->philo[i].last_eat > input->time_to_die)
 			{
+				input->dead = 1;
 				ft_print(&input->philo[i], "dieds");
-				return (0);
+				i = -1;
+				while (++i < input->nb_philo)
+					pthread_detach(input->philo[i].thread);
+				return (NULL);
 			}
 		}
-		if (input->nb_eat != -1)
-		{
-			i = -1;
-			while (++i < input->nb_philo)
-				if (input->philo[i].nb_meal < input->nb_eat)
-					break ;
-			if (i == input->nb_philo)
-				return (0);
-		}
 	}
-	return (0);
+	return (NULL);
 }
 
 int	ft_create_threads(t_input *input)
@@ -58,7 +55,7 @@ int	ft_create_threads(t_input *input)
 		if (pthread_create(&input->philo[i].thread, NULL, ft_routine,
 				&input->philo[i]) != 0)
 			return (0);
-		ft_usleep(1);
+		usleep(100);
 		i++;
 	}
 	return (1);
@@ -98,6 +95,8 @@ int	ft_join_threads(t_input *input)
 		printf("thread %d joined\n", i);
 		i++;
 	}
+	if (pthread_join(input->check, NULL) != 0)
+		return (0);
 	return (1);
 }
 
@@ -110,8 +109,11 @@ int main(int argc, char **argv)
 	ft_parsing(argc, argv, &input);
 	ft_init(&input);
 	ft_create_threads(&input);
-	ft_check(&input);
-	input.dead = 1;
+	if (pthread_create(&input.check, NULL, ft_check, &input) != 0)
+		return (0);
+	// ft_check(&input);
+	// input.dead = 1;
+	// printf("%d\n", input.dead);
 	ft_join_threads(&input);
 	return (0);
 }
