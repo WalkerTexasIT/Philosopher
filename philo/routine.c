@@ -6,7 +6,7 @@
 /*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 13:37:32 by brminner          #+#    #+#             */
-/*   Updated: 2023/08/07 15:28:46 by brminner         ###   ########.fr       */
+/*   Updated: 2023/08/08 12:08:20 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,12 @@ void	ft_take_forks(t_philo *philo)
 void	ft_eat(t_philo *philo)
 {
 	ft_print(philo, "is eating");
-	philo->last_eat = ft_get_time();
+	philo->last_eat = ft_get_time() + philo->input->time_to_eat;
 	ft_usleep(philo->input->time_to_eat);
 	philo->nb_meal++;
 	pthread_mutex_unlock(philo->left_fork);
 	pthread_mutex_unlock(philo->right_fork);
-	philo->last_eat = ft_get_time();
+	//philo->last_eat = ft_get_time();
 }
 
 void	ft_sleep(t_philo *philo)
@@ -40,6 +40,13 @@ void	ft_sleep(t_philo *philo)
 void	ft_think(t_philo *philo)
 {
 	ft_print(philo, "is thinking");
+}
+
+void	ft_dead(t_philo *philo)
+{
+	philo->input->dead = 1;
+	ft_print(philo, "dieds");
+	pthread_detach(philo->thread);
 }
 
 void	*ft_routine(void *arg)
@@ -54,9 +61,9 @@ void	*ft_routine(void *arg)
 		ft_sleep(philo);
 		ft_think(philo);
 		if (philo->input->nb_eat != -1 && philo->nb_meal == philo->input->nb_eat)
-			return (NULL);
+			ft_dead(philo);
 		if (philo->input->dead == 1)
-			return (NULL);
+			pthread_detach(philo->thread);
 		printf("dead = %d\n", philo->input->dead);
 	}
 	return (NULL);

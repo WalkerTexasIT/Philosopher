@@ -6,7 +6,7 @@
 /*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 21:55:33 by brminner          #+#    #+#             */
-/*   Updated: 2023/08/07 17:11:09 by brminner         ###   ########.fr       */
+/*   Updated: 2023/08/08 14:07:35 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,6 @@ int	ft_join_threads(t_input *input)
 		printf("thread %d joined\n", i);
 		i++;
 	}
-	if (pthread_join(input->check, NULL) != 0)
-		return (0);
 	return (1);
 }
 
