@@ -6,7 +6,7 @@
 /*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 13:37:32 by brminner          #+#    #+#             */
-/*   Updated: 2023/08/08 12:08:20 by brminner         ###   ########.fr       */
+/*   Updated: 2023/08/08 19:12:43 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	*ft_routine(void *arg)
 		if (philo->input->nb_eat != -1 && philo->nb_meal == philo->input->nb_eat)
 			ft_dead(philo);
 		if (philo->input->dead == 1)
-			pthread_detach(philo->thread);
+			return (NULL);
 		printf("dead = %d\n", philo->input->dead);
 	}
 	return (NULL);
