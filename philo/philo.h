@@ -6,7 +6,7 @@
 /*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 22:16:33 by brminner          #+#    #+#             */
-/*   Updated: 2023/08/08 16:16:13 by brminner         ###   ########.fr       */
+/*   Updated: 2023/08/10 17:24:52 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ typedef struct s_input {
 	pthread_mutex_t	print;
 	pthread_t		check;
 	int				dead;
+	int				finish;
 }				t_input;
 
 int				ft_error_handling(int argc, char **argv);

@@ -6,35 +6,63 @@
 /*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 21:55:33 by brminner          #+#    #+#             */
-/*   Updated: 2023/08/08 14:07:35 by brminner         ###   ########.fr       */
+/*   Updated: 2023/08/10 18:26:37 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	*ft_check(void *arg)
+int	ft_detach_threads(t_input *input)
 {
-	t_input	*input;
-	int		i;
+	int	i;
 
-	input = (t_input *)arg;
+	i = 0;
+	while (i < input->nb_philo)
+	{
+		if (pthread_detach(input->philo[i].thread) != 0)
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+int	ft_join_threads(t_input *input)
+{
+	int	i;
+
+	i = 0;
+	while (i < input->nb_philo)
+	{
+		if (pthread_join(input->philo[i].thread, NULL) != 0)
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+int	ft_check(t_input *input)
+{
+	int	i;
+
 	while (1)
 	{
-		i = -1;
-		while (++i < input->nb_philo)
+		i = 0;
+		while (i < input->nb_philo)
 		{
-			if (ft_get_time() - input->philo[i].last_eat > input->time_to_die)
+			if (input->philo[i].last_eat != -1 && ft_get_time() - input->philo[i].last_eat > input->time_to_die)
 			{
-				input->dead = 1;
-				ft_print(&input->philo[i], "dieds");
-				i = -1;
-				while (++i < input->nb_philo)
-					pthread_detach(input->philo[i].thread);
-				return (NULL);
+				printf("%d : last eat -> %lld\n", input->philo[i].id, input->philo[i].last_eat);
+				ft_print(&input->philo[i], "died");
+				return (ft_detach_threads(input));
 			}
+			if (input->nb_eat != -1 && input->philo[i].nb_meal == input->nb_eat)
+				input->finish = 1;
+			if (input->finish == input->nb_philo - 1)
+				return (ft_join_threads(input));
+			i++;
 		}
 	}
-	return (NULL);
+	return (1);
 }
 
 int	ft_create_threads(t_input *input)
@@ -48,6 +76,7 @@ int	ft_create_threads(t_input *input)
 		input->philo[i].last_eat = 0;
 		input->philo[i].nb_meal = 0;
 		input->philo[i].start = ft_get_time();
+		input->philo[i].last_eat = ft_get_time();
 		input->philo[i].print = &input->print;
 		input->philo[i].left_fork = &input->forks[i];
 		input->philo[i].right_fork = &input->forks[(i + 1) % input->nb_philo];
@@ -55,7 +84,7 @@ int	ft_create_threads(t_input *input)
 		if (pthread_create(&input->philo[i].thread, NULL, ft_routine,
 				&input->philo[i]) != 0)
 			return (0);
-		usleep(100);
+		usleep(20);
 		i++;
 	}
 	return (1);
@@ -79,24 +108,28 @@ int	ft_init(t_input *input)
 	}
 	pthread_mutex_init(&input->print, NULL);
 	input->dead = 0;
+	input->finish = 0;
 	return (1);
 }
 
-int	ft_join_threads(t_input *input)
-{
-	int	i;
+// void	*ft_join_threads(void *arg)
+// {
+// 	t_input	*input;
+// 	int		i;
 
-	i = 0;
-	printf("test\n");
-	while (i < input->nb_philo)
-	{
-		if (pthread_join(input->philo[i].thread, NULL) != 0)
-			return (0);
-		printf("thread %d joined\n", i);
-		i++;
-	}
-	return (1);
-}
+// 	input = (t_input *)arg;
+// 	i = 0;
+// 	printf("test\n");
+// 	while (i < input->nb_philo)
+// 	{
+// 		if (pthread_join(input->philo[i].thread, NULL) != 0)
+// 			return (0);
+// 		printf("thread %d joined\n", i);
+// 		i++;
+// 	}
+// 	input->finish = 1;
+// 	return (1);
+// }
 
 int main(int argc, char **argv)
 {
@@ -107,11 +140,10 @@ int main(int argc, char **argv)
 	ft_parsing(argc, argv, &input);
 	ft_init(&input);
 	ft_create_threads(&input);
-	if (pthread_create(&input.check, NULL, ft_check, &input) != 0)
-		return (0);
-	// ft_check(&input);
-	// input.dead = 1;
-	// printf("%d\n", input.dead);
-	ft_join_threads(&input);
+	// if (pthread_create(&input.check, NULL, ft_join_threads, &input) != 0)
+	// 	return (0);
+	ft_check(&input);
+	free(input.philo);
+	free(input.forks);
 	return (0);
 }
