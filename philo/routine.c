@@ -6,7 +6,7 @@
 /*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 13:37:32 by brminner          #+#    #+#             */
-/*   Updated: 2023/08/10 18:20:03 by brminner         ###   ########.fr       */
+/*   Updated: 2023/08/15 13:19:23 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,7 @@ void	*ft_routine(void *arg)
 		ft_sleep(philo);
 		ft_print(philo, "is thinking");
 		if (philo->input->nb_eat != -1 && philo->nb_meal == philo->input->nb_eat)
-		{
-			philo->last_eat = -1;
 			return (NULL);
-		}
 	}
 	return (NULL);
 }

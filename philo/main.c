@@ -6,7 +6,7 @@
 /*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 21:55:33 by brminner          #+#    #+#             */
-/*   Updated: 2023/08/10 18:26:37 by brminner         ###   ########.fr       */
+/*   Updated: 2023/08/15 13:12:21 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,17 @@ int	ft_check(t_input *input)
 		i = 0;
 		while (i < input->nb_philo)
 		{
-			if (input->philo[i].last_eat != -1 && ft_get_time() - input->philo[i].last_eat > input->time_to_die)
+			if (input->philo[i].last_eat != -1 && input->philo[i].nb_meal != input->nb_eat && ft_get_time() - input->philo[i].last_eat > input->time_to_die)
 			{
-				printf("%d : last eat -> %lld\n", input->philo[i].id, input->philo[i].last_eat);
+				//printf("%d : last eat -> %lld\nnb of eat : %d\n", input->philo[i].id, input->philo[i].last_eat, input->philo[i].nb_meal);
 				ft_print(&input->philo[i], "died");
 				return (ft_detach_threads(input));
 			}
-			if (input->nb_eat != -1 && input->philo[i].nb_meal == input->nb_eat)
-				input->finish = 1;
+			if (input->nb_eat != -1 && input->philo[i].nb_meal == input->nb_eat && input->philo[i].last_eat != -1)
+			{
+				input->philo[i].last_eat = -1;
+				input->finish++;
+			}
 			if (input->finish == input->nb_philo - 1)
 				return (ft_join_threads(input));
 			i++;
@@ -112,25 +115,6 @@ int	ft_init(t_input *input)
 	return (1);
 }
 
-// void	*ft_join_threads(void *arg)
-// {
-// 	t_input	*input;
-// 	int		i;
-
-// 	input = (t_input *)arg;
-// 	i = 0;
-// 	printf("test\n");
-// 	while (i < input->nb_philo)
-// 	{
-// 		if (pthread_join(input->philo[i].thread, NULL) != 0)
-// 			return (0);
-// 		printf("thread %d joined\n", i);
-// 		i++;
-// 	}
-// 	input->finish = 1;
-// 	return (1);
-// }
-
 int main(int argc, char **argv)
 {
 	t_input	input;
@@ -140,8 +124,6 @@ int main(int argc, char **argv)
 	ft_parsing(argc, argv, &input);
 	ft_init(&input);
 	ft_create_threads(&input);
-	// if (pthread_create(&input.check, NULL, ft_join_threads, &input) != 0)
-	// 	return (0);
 	ft_check(&input);
 	free(input.philo);
 	free(input.forks);
