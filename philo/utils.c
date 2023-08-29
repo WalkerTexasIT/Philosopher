@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
+/*   By: brminner <brminner@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 21:57:46 by brminner          #+#    #+#             */
-/*   Updated: 2023/08/10 18:31:55 by brminner         ###   ########.fr       */
+/*   Updated: 2023/08/28 12:24:37 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,4 +78,17 @@ int	ft_atoi(char *str)
 		i++;
 	}
 	return (nb);
+}
+
+int	ft_exit(t_input *input)
+{
+	int	i;
+
+	i = 0;
+	while (i < input->nb_philo)
+		pthread_mutex_destroy(&input->forks[i++]);
+	pthread_mutex_destroy(&input->print);
+	free(input->philo);
+	free(input->forks);
+	return (0);
 }

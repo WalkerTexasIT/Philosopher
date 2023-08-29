@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
+/*   By: brminner <brminner@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 22:16:33 by brminner          #+#    #+#             */
-/*   Updated: 2023/08/15 13:03:21 by brminner         ###   ########.fr       */
+/*   Updated: 2023/08/29 20:23:23 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct s_philo
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
 	pthread_mutex_t	*print;
+	pthread_mutex_t	mut_eat;
 	struct s_input	*input;
 	pthread_t		thread;
 }				t_philo;
@@ -56,5 +57,6 @@ void			*ft_routine(void *arg);
 long long int	ft_get_time(void);
 void 			ft_usleep(long long int time);
 void			ft_print(t_philo *philo, char *str);
+int				ft_exit(t_input *input);
 
 #endif

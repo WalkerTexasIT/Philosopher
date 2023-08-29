@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
+/*   By: brminner <brminner@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 13:37:32 by brminner          #+#    #+#             */
-/*   Updated: 2023/08/15 13:19:23 by brminner         ###   ########.fr       */
+/*   Updated: 2023/08/29 23:25:28 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,14 @@ void	ft_take_forks(t_philo *philo)
 
 void	ft_eat(t_philo *philo)
 {
+	pthread_mutex_lock(&philo->mut_eat);
 	philo->last_eat = ft_get_time();
+	pthread_mutex_unlock(&philo->mut_eat);
 	ft_print(philo, "is eating");
 	ft_usleep(philo->input->time_to_eat);
+	pthread_mutex_lock(&philo->mut_eat);
 	philo->nb_meal++;
+	pthread_mutex_unlock(&philo->mut_eat);
 	pthread_mutex_unlock(philo->left_fork);
 	pthread_mutex_unlock(philo->right_fork);
 }
