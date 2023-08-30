@@ -4,7 +4,8 @@ NAME = philo
 SRC =	main.c \
 		parse.c \
 		routine.c \
-		utils.c
+		utils.c \
+		threads.c
 
 OBJ = $(SRC:.c=.o)
 

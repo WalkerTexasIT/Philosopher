@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brminner <brminner@student.s19.be>         +#+  +:+       +#+        */
+/*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 13:37:32 by brminner          #+#    #+#             */
-/*   Updated: 2023/08/29 23:25:28 by brminner         ###   ########.fr       */
+/*   Updated: 2023/08/30 13:55:31 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	ft_eat(t_philo *philo)
 	philo->last_eat = ft_get_time();
 	pthread_mutex_unlock(&philo->mut_eat);
 	ft_print(philo, "is eating");
-	ft_usleep(philo->input->time_to_eat);
+	ft_usleep(philo->in->time_to_eat);
 	pthread_mutex_lock(&philo->mut_eat);
 	philo->nb_meal++;
 	pthread_mutex_unlock(&philo->mut_eat);
@@ -37,7 +37,7 @@ void	ft_eat(t_philo *philo)
 void	ft_sleep(t_philo *philo)
 {
 	ft_print(philo, "is sleeping");
-	ft_usleep(philo->input->time_to_sleep);
+	ft_usleep(philo->in->time_to_sleep);
 }
 
 void	*ft_routine(void *arg)
@@ -51,7 +51,7 @@ void	*ft_routine(void *arg)
 		ft_eat(philo);
 		ft_sleep(philo);
 		ft_print(philo, "is thinking");
-		if (philo->input->nb_eat != -1 && philo->nb_meal == philo->input->nb_eat)
+		if (philo->in->nb_eat != -1 && philo->nb_meal == philo->in->nb_eat)
 			return (NULL);
 	}
 	return (NULL);

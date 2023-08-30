@@ -3,140 +3,80 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brminner <brminner@student.s19.be>         +#+  +:+       +#+        */
+/*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 21:55:33 by brminner          #+#    #+#             */
-/*   Updated: 2023/08/29 23:24:09 by brminner         ###   ########.fr       */
+/*   Updated: 2023/08/30 14:21:43 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ft_detach_threads(t_input *input)
+int	ft_exit(t_in *in)
 {
 	int	i;
 
 	i = 0;
-	while (i < input->nb_philo)
+	while (i < in->nb_philo)
 	{
-		if (pthread_detach(input->philo[i].thread) != 0)
-			return (0);
-		i++;
+		pthread_mutex_destroy(&in->philo[i].mut_eat);
+		pthread_mutex_destroy(&in->forks[i++]);
 	}
-	return (1);
+	pthread_mutex_destroy(&in->print);
+	free(in->philo);
+	free(in->forks);
+	return (0);
 }
 
-int	ft_join_threads(t_input *input)
+int	sub_check(t_in *in, int i)
 {
-	int	i;
-
-	i = 0;
-	while (i < input->nb_philo)
+	pthread_mutex_lock(&in->philo[i].mut_eat);
+	if (in->philo[i].last_eat != -1 && in->philo[i].nb_meal != in->nb_eat
+		&& ft_get_time() - in->philo[i].last_eat > in->time_die)
 	{
-		if (pthread_join(input->philo[i].thread, NULL) != 0)
-			return (0);
-		i++;
+		ft_print(&in->philo[i], "died");
+		return (ft_detach_threads(in));
 	}
+	if (in->nb_eat != -1 && in->philo[i].nb_meal == in->nb_eat
+		&& in->philo[i].last_eat != -1)
+	{
+		in->philo[i].last_eat = -1;
+		in->finish++;
+	}
+	pthread_mutex_unlock(&in->philo[i].mut_eat);
 	return (1);
 }
 
-int	ft_check(t_input *input)
+int	ft_check(t_in *in)
 {
 	int	i;
 
 	while (1)
 	{
-		i = 0;
-		while (i < input->nb_philo)
+		i = -1;
+		while (++i < in->nb_philo)
 		{
-			pthread_mutex_lock(&input->philo[i].mut_eat);
-			if (input->philo[i].last_eat != -1 && input->philo[i].nb_meal != input->nb_eat && ft_get_time() - input->philo[i].last_eat > input->time_to_die)
-			{
-				//printf("%d : last eat -> %lld\nnb of eat : %d\n", input->philo[i].id, input->philo[i].last_eat, input->philo[i].nb_meal);
-				ft_print(&input->philo[i], "died");
-				return (ft_detach_threads(input));
-			}
-			if (input->nb_eat != -1 && input->philo[i].nb_meal == input->nb_eat && input->philo[i].last_eat != -1)
-			{
-				input->philo[i].last_eat = -1;
-				input->finish++;
-			}
-			pthread_mutex_unlock(&input->philo[i].mut_eat);
-			if (input->finish == input->nb_philo - 1)
-				return (ft_join_threads(input));
-			i++;
+			if (sub_check(in, i) == 0)
+				return (0);
+			if (in->finish == in->nb_philo - 1)
+				return (ft_join_threads(in));
 		}
 	}
 	return (1);
 }
 
-int	ft_create_threads(t_input *input)
+int	main(int argc, char **argv)
 {
-	int	i;
-
-	i = 0;
-	while (i < input->nb_philo)
-	{
-		input->philo[i].id = i + 1;
-		input->philo[i].last_eat = 0;
-		input->philo[i].nb_meal = 0;
-		input->philo[i].start = ft_get_time();
-		input->philo[i].last_eat = ft_get_time();
-		input->philo[i].print = &input->print;
-		input->philo[i].left_fork = &input->forks[i];
-		input->philo[i].right_fork = &input->forks[(i + 1) % input->nb_philo];
-		input->philo[i].input = input;
-		if (pthread_create(&input->philo[i].thread, NULL, ft_routine,
-				&input->philo[i]) != 0)
-		{
-			while (i >= 0)
-				pthread_detach(input->philo[i--].thread);
-			return (0);
-		}
-		usleep(20);
-		i++;
-	}
-	return (1);
-}
-
-int	ft_init(t_input *input)
-{
-	int	i;
-
-	i = 0;
-	input->philo = malloc(sizeof(t_philo) * input->nb_philo);
-	if (!input->philo)
-		return (0);
-	input->forks = malloc(sizeof(pthread_mutex_t) * input->nb_philo);
-	if (!input->forks)
-	{
-		free(input->philo);
-		return (0);
-	}
-	while (i < input->nb_philo)
-	{
-		pthread_mutex_init(&input->forks[i], NULL);
-		pthread_mutex_init(&input->philo[i].mut_eat, NULL);
-		i++;
-	}
-	pthread_mutex_init(&input->print, NULL);
-	input->dead = 0;
-	input->finish = 0;
-	return (1);
-}
-
-int main(int argc, char **argv)
-{
-	t_input	input;
+	t_in	in;
 
 	if (ft_error_handling(argc, argv) == 0)
 		return (0);
-	ft_parsing(argc, argv, &input);
-	if (ft_init(&input) == 0)
+	ft_parsing(argc, argv, &in);
+	if (ft_init(&in) == 0)
 		return (0);
-	if (ft_create_threads(&input) == 0)
-		return (ft_exit(&input));
-	ft_check(&input);
-	ft_exit(&input);
+	if (ft_create_threads(&in) == 0)
+		return (ft_exit(&in));
+	ft_check(&in);
+	ft_exit(&in);
 	return (0);
 }

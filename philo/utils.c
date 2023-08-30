@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brminner <brminner@student.s19.be>         +#+  +:+       +#+        */
+/*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 21:57:46 by brminner          #+#    #+#             */
-/*   Updated: 2023/08/28 12:24:37 by brminner         ###   ########.fr       */
+/*   Updated: 2023/08/30 14:20:16 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,20 +20,13 @@ long long int	ft_get_time(void)
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
-void ft_usleep(long long int time)
+void	ft_usleep(long long int time)
 {
 	long long int	start;
 
 	start = ft_get_time();
 	while (ft_get_time() - start < time)
 		usleep(100);
-}
-
-void	ft_print(t_philo *philo, char *str)
-{
-	pthread_mutex_lock(philo->print);
-	printf("%lld %d %s\n", ft_get_time() - philo->start, philo->id, str);
-	pthread_mutex_unlock(philo->print);
 }
 
 int	ft_isdigit(char *str)
@@ -52,7 +45,7 @@ int	ft_isdigit(char *str)
 
 long long	ft_atol(char *str)
 {
-	int		i;
+	int			i;
 	long long	nb;
 
 	i = 0;
@@ -78,17 +71,4 @@ int	ft_atoi(char *str)
 		i++;
 	}
 	return (nb);
-}
-
-int	ft_exit(t_input *input)
-{
-	int	i;
-
-	i = 0;
-	while (i < input->nb_philo)
-		pthread_mutex_destroy(&input->forks[i++]);
-	pthread_mutex_destroy(&input->print);
-	free(input->philo);
-	free(input->forks);
-	return (0);
 }

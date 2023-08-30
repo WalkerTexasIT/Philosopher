@@ -6,7 +6,7 @@
 /*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 21:56:31 by brminner          #+#    #+#             */
-/*   Updated: 2023/08/03 18:45:42 by brminner         ###   ########.fr       */
+/*   Updated: 2023/08/30 13:55:31 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,14 @@ int	ft_error_handling(int argc, char **argv)
 	return (1);
 }
 
-void	ft_parsing(int argc, char **argv, t_input *input)
+void	ft_parsing(int argc, char **argv, t_in *in)
 {
-	input->nb_philo = ft_atoi(argv[1]);
-	input->time_to_die = ft_atoi(argv[2]);
-	input->time_to_eat = ft_atoi(argv[3]);
-	input->time_to_sleep = ft_atoi(argv[4]);
+	in->nb_philo = ft_atoi(argv[1]);
+	in->time_die = ft_atoi(argv[2]);
+	in->time_to_eat = ft_atoi(argv[3]);
+	in->time_to_sleep = ft_atoi(argv[4]);
 	if (argc == 6)
-		input->nb_eat = ft_atoi(argv[5]);
+		in->nb_eat = ft_atoi(argv[5]);
 	else
-		input->nb_eat = -1;
+		in->nb_eat = -1;
 }
