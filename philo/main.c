@@ -6,7 +6,7 @@
 /*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 21:55:33 by brminner          #+#    #+#             */
-/*   Updated: 2023/08/30 14:21:43 by brminner         ###   ########.fr       */
+/*   Updated: 2023/09/04 13:24:43 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,9 @@ int	sub_check(t_in *in, int i)
 		&& ft_get_time() - in->philo[i].last_eat > in->time_die)
 	{
 		ft_print(&in->philo[i], "died");
+		pthread_mutex_lock(&in->mut_dead);
+		in->dead = 1;
+		pthread_mutex_unlock(&in->mut_dead);
 		return (ft_detach_threads(in));
 	}
 	if (in->nb_eat != -1 && in->philo[i].nb_meal == in->nb_eat

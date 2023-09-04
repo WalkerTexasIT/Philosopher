@@ -6,7 +6,7 @@
 /*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 22:16:33 by brminner          #+#    #+#             */
-/*   Updated: 2023/08/30 14:17:40 by brminner         ###   ########.fr       */
+/*   Updated: 2023/09/04 12:50:28 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ typedef struct s_in {
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	print;
 	pthread_t		check;
+	pthread_mutex_t	mut_dead;
 	int				dead;
 	int				finish;
 }				t_in;
