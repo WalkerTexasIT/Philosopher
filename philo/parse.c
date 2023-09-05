@@ -6,7 +6,7 @@
 /*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 21:56:31 by brminner          #+#    #+#             */
-/*   Updated: 2023/08/30 13:55:31 by brminner         ###   ########.fr       */
+/*   Updated: 2023/09/05 11:02:26 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ int	ft_error_handling(int argc, char **argv)
 			printf("Error: wrong argument\n");
 			return (0);
 		}
-		if (ft_atol(argv[i]) > 2147483647 || ft_atol(argv[i]) < 0)
+		if (ft_atol(argv[i]) > 2147483647 || ft_atol(argv[i]) <= 0)
 		{
-			printf("Error: argument too big\n");
+			printf("Error: wrong argument\n");
 			return (0);
 		}
 		i++;

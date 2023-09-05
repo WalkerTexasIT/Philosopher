@@ -6,7 +6,7 @@
 /*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 13:37:32 by brminner          #+#    #+#             */
-/*   Updated: 2023/09/04 17:52:52 by brminner         ###   ########.fr       */
+/*   Updated: 2023/09/05 10:47:00 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int	ft_take_forks(t_philo *philo)
 	if (philo->in->nb_philo == 1)
 	{
 		pthread_mutex_lock(&philo->in->mut_dead);
+		ft_usleep(philo->in->time_die);
 		ft_print(philo, "died");
 		philo->in->dead = 1;
 		pthread_mutex_unlock(&philo->in->mut_dead);
