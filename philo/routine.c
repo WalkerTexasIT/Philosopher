@@ -6,7 +6,7 @@
 /*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 13:37:32 by brminner          #+#    #+#             */
-/*   Updated: 2023/09/05 10:47:00 by brminner         ###   ########.fr       */
+/*   Updated: 2023/09/12 17:01:52 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,6 @@
 
 int	ft_take_forks(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->in->mut_dead);
-	if (philo->in->dead == 1)
-		return (1);
-	pthread_mutex_unlock(&philo->in->mut_dead);
 	pthread_mutex_lock(philo->left_fork);
 	ft_print(philo, "has taken a fork");
 	if (philo->in->nb_philo == 1)
@@ -63,16 +59,17 @@ void	*ft_routine(void *arg)
 	{
 		if (ft_take_forks(philo))
 			return (NULL);
-		pthread_mutex_lock(&philo->in->mut_dead);
 		ft_eat(philo);
 		ft_sleep(philo);
-		pthread_mutex_lock(&philo->in->mut_dead);
+		pthread_mutex_lock(philo->mut_dead);
 		if (philo->in->dead == 1)
 			return (NULL);
-		pthread_mutex_unlock(&philo->in->mut_dead);
+		pthread_mutex_unlock(philo->mut_dead);
 		ft_print(philo, "is thinking");
+		pthread_mutex_lock(&philo->mut_eat);
 		if (philo->in->nb_eat != -1 && philo->nb_meal == philo->in->nb_eat)
 			return (NULL);
+		pthread_mutex_unlock(&philo->mut_eat);
 	}
 	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 21:55:33 by brminner          #+#    #+#             */
-/*   Updated: 2023/09/04 13:24:43 by brminner         ###   ########.fr       */
+/*   Updated: 2023/09/05 16:45:51 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int	ft_exit(t_in *in)
 		pthread_mutex_destroy(&in->forks[i++]);
 	}
 	pthread_mutex_destroy(&in->print);
+	pthread_mutex_destroy(&in->mut_dead);
 	free(in->philo);
 	free(in->forks);
 	return (0);

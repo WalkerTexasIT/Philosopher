@@ -6,7 +6,7 @@
 /*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 22:16:33 by brminner          #+#    #+#             */
-/*   Updated: 2023/09/04 12:50:28 by brminner         ###   ########.fr       */
+/*   Updated: 2023/09/12 17:01:09 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct s_philo
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
 	pthread_mutex_t	*print;
+	pthread_mutex_t	*mut_dead;
 	pthread_mutex_t	mut_eat;
 	struct s_in		*in;
 	pthread_t		thread;
