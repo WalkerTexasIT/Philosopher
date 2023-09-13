@@ -6,7 +6,7 @@
 /*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 14:09:05 by brminner          #+#    #+#             */
-/*   Updated: 2023/09/12 17:51:40 by brminner         ###   ########.fr       */
+/*   Updated: 2023/09/13 15:34:46 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,10 @@ void	ft_print(t_philo *philo, char *str)
 		pthread_mutex_lock(&philo->in->mut_dead);
 		philo->in->dead = 1;
 		pthread_mutex_unlock(&philo->in->mut_dead);
+		pthread_mutex_lock(philo->print);
+		printf("%lld %d %s\n", ft_get_time() - philo->start, philo->id, str);
 		return ;
 	}
-	pthread_mutex_lock(philo->print);
 	printf("%lld %d %s\n", ft_get_time() - philo->start, philo->id, str);
 	pthread_mutex_unlock(philo->print);
 }
@@ -50,10 +51,11 @@ int	ft_detach_threads(t_in *in)
 	i = 0;
 	while (i < in->nb_philo)
 	{
-		if (pthread_detach(in->philo[i].thread) != 0)
-			return (0);
+		printf("%d lol\n", pthread_detach(in->philo[i].thread));
+			//return (0);
 		i++;
 	}
+	//ft_join_threads(in);
 	printf("All threads detached\n");
 	return (0);
 }
