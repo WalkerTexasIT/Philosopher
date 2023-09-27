@@ -6,7 +6,7 @@
 /*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 13:37:32 by brminner          #+#    #+#             */
-/*   Updated: 2023/09/12 17:01:52 by brminner         ###   ########.fr       */
+/*   Updated: 2023/09/27 13:26:46 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,11 @@ void	ft_eat(t_philo *philo)
 	pthread_mutex_unlock(philo->right_fork);
 }
 
-void	ft_sleep(t_philo *philo)
+int	ft_sleep(t_philo *philo)
 {
 	ft_print(philo, "is sleeping");
 	ft_usleep(philo->in->time_to_sleep);
+	return (1);
 }
 
 void	*ft_routine(void *arg)
@@ -55,12 +56,15 @@ void	*ft_routine(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
+	if (philo->id % 2 == 0)
+		ft_usleep(philo->in->time_to_eat / 2);
 	while (1)
 	{
 		if (ft_take_forks(philo))
 			return (NULL);
 		ft_eat(philo);
-		ft_sleep(philo);
+		if (ft_sleep(philo) == 0)
+			return (NULL);
 		pthread_mutex_lock(philo->mut_dead);
 		if (philo->in->dead == 1)
 			return (NULL);

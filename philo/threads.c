@@ -6,7 +6,7 @@
 /*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 14:09:05 by brminner          #+#    #+#             */
-/*   Updated: 2023/09/13 15:34:46 by brminner         ###   ########.fr       */
+/*   Updated: 2023/09/27 12:18:38 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ int	ft_join_threads(t_in *in)
 	{
 		if (pthread_join(in->philo[i].thread, NULL) != 0)
 			return (0);
+		printf("Thread %d joined\n", i);
 		i++;
 	}
 	return (1);
@@ -94,11 +95,10 @@ int	ft_create_threads(t_in *in)
 		if (pthread_create(&in->philo[i].thread, NULL, ft_routine,
 				&in->philo[i]) != 0)
 		{
-			while (i >= 0)
-				pthread_detach(in->philo[i--].thread);
+			printf("Error creating thread\n");
 			return (0);
 		}
-		usleep(100);
+		//usleep(100);
 	}
 	return (1);
 }

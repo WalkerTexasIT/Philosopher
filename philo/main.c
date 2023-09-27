@@ -6,7 +6,7 @@
 /*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 21:55:33 by brminner          #+#    #+#             */
-/*   Updated: 2023/09/13 15:21:23 by brminner         ###   ########.fr       */
+/*   Updated: 2023/09/27 12:00:50 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	sub_check(t_in *in, int i)
 		pthread_mutex_lock(&in->mut_dead);
 		in->dead = 1;
 		pthread_mutex_unlock(&in->mut_dead);
-		return (ft_detach_threads(in));
+		return (ft_join_threads(in));
 	}
 	if (in->nb_eat != -1 && in->philo[i].nb_meal == in->nb_eat
 		&& in->philo[i].last_eat != -1)
