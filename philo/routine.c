@@ -6,7 +6,7 @@
 /*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 13:37:32 by brminner          #+#    #+#             */
-/*   Updated: 2023/09/27 13:26:46 by brminner         ###   ########.fr       */
+/*   Updated: 2023/09/27 14:49:46 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,15 +60,20 @@ void	*ft_routine(void *arg)
 		ft_usleep(philo->in->time_to_eat / 2);
 	while (1)
 	{
+		if (ft_check_dead(philo))
+			return (NULL);
 		if (ft_take_forks(philo))
 			return (NULL);
 		ft_eat(philo);
+		printf("after eat %d\n", philo->id);
+		if (ft_check_dead(philo))
+			return (NULL);
+		printf("lol %d\n", philo->id);
 		if (ft_sleep(philo) == 0)
 			return (NULL);
-		pthread_mutex_lock(philo->mut_dead);
-		if (philo->in->dead == 1)
+		if (ft_check_dead(philo))
 			return (NULL);
-		pthread_mutex_unlock(philo->mut_dead);
+		printf("test %d\n", philo->id);
 		ft_print(philo, "is thinking");
 		pthread_mutex_lock(&philo->mut_eat);
 		if (philo->in->nb_eat != -1 && philo->nb_meal == philo->in->nb_eat)

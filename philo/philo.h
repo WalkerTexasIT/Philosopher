@@ -6,7 +6,7 @@
 /*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 22:16:33 by brminner          #+#    #+#             */
-/*   Updated: 2023/09/12 17:01:09 by brminner         ###   ########.fr       */
+/*   Updated: 2023/09/27 13:45:47 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,5 +64,6 @@ int				ft_detach_threads(t_in *in);
 int				ft_join_threads(t_in *in);
 int				ft_init(t_in *in);
 int				ft_create_threads(t_in *in);
+int				ft_check_dead(t_philo *philo);
 
 #endif

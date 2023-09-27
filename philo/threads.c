@@ -6,7 +6,7 @@
 /*   By: brminner <brminner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 14:09:05 by brminner          #+#    #+#             */
-/*   Updated: 2023/09/27 12:18:38 by brminner         ###   ########.fr       */
+/*   Updated: 2023/09/27 14:26:47 by brminner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,23 +40,22 @@ void	ft_print(t_philo *philo, char *str)
 		printf("%lld %d %s\n", ft_get_time() - philo->start, philo->id, str);
 		return ;
 	}
+	printf("i'm stuck %d\n", philo->id);
+	pthread_mutex_lock(philo->print);
 	printf("%lld %d %s\n", ft_get_time() - philo->start, philo->id, str);
 	pthread_mutex_unlock(philo->print);
 }
 
-int	ft_detach_threads(t_in *in)
+int	ft_check_dead(t_philo *philo)
 {
-	int	i;
-
-	i = 0;
-	while (i < in->nb_philo)
+	printf("i'm in check dead %d\n", philo->id);
+	pthread_mutex_lock(&philo->in->mut_dead);
+	if (philo->in->dead == 1)
 	{
-		printf("%d lol\n", pthread_detach(in->philo[i].thread));
-			//return (0);
-		i++;
+		pthread_mutex_unlock(&philo->in->mut_dead);
+		return (1);
 	}
-	//ft_join_threads(in);
-	printf("All threads detached\n");
+	pthread_mutex_unlock(&philo->in->mut_dead);
 	return (0);
 }
 
@@ -72,7 +71,7 @@ int	ft_join_threads(t_in *in)
 		printf("Thread %d joined\n", i);
 		i++;
 	}
-	return (1);
+	return (0);
 }
 
 int	ft_create_threads(t_in *in)
