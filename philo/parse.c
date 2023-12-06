@@ -12,6 +12,24 @@
 
 #include "philo.h"
 
+void	ft_print(t_philo *philo, char *str)
+{
+	if (ft_check_dead(philo) == 1)
+		return ;
+	if (ft_strcmp(str, "died") == 0)
+	{
+		pthread_mutex_lock(&philo->in->mut_dead);
+		philo->in->dead = 1;
+		pthread_mutex_unlock(&philo->in->mut_dead);
+		pthread_mutex_lock(philo->print);
+		printf("%lld %d %s\n", ft_get_time() - philo->start, philo->id, str);
+		return ;
+	}
+	pthread_mutex_lock(philo->print);
+	printf("%lld %d %s\n", ft_get_time() - philo->start, philo->id, str);
+	pthread_mutex_unlock(philo->print);
+}
+
 int	ft_error_handling(int argc, char **argv)
 {
 	int	i;

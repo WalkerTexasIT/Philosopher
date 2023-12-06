@@ -20,13 +20,17 @@ long long int	ft_get_time(void)
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
-void	ft_usleep(long long int time)
+void	ft_usleep(long long int time, t_in *in)
 {
 	long long int	start;
 
 	start = ft_get_time();
 	while (ft_get_time() - start < time)
+	{
+		if (in->dead == 1)
+			return ;
 		usleep(100);
+	}
 }
 
 int	ft_isdigit(char *str)

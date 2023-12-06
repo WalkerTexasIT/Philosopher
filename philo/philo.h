@@ -29,7 +29,7 @@ typedef struct s_philo
 	pthread_mutex_t	*right_fork;
 	pthread_mutex_t	*print;
 	pthread_mutex_t	*mut_dead;
-	pthread_mutex_t	mut_eat;
+	pthread_mutex_t	*mut_eat;
 	struct s_in		*in;
 	pthread_t		thread;
 }				t_philo;
@@ -42,6 +42,7 @@ typedef struct s_in {
 	int				nb_eat;
 	t_philo			*philo;
 	pthread_mutex_t	*forks;
+	pthread_mutex_t	*muts_eat;
 	pthread_mutex_t	print;
 	pthread_t		check;
 	pthread_mutex_t	mut_dead;
@@ -57,7 +58,7 @@ long long		ft_atol(char *str);
 void			ft_parsing(int argc, char **argv, t_in *philo);
 void			*ft_routine(void *arg);
 long long int	ft_get_time(void);
-void			ft_usleep(long long int time);
+void			ft_usleep(long long int time, t_in *in);
 void			ft_print(t_philo *philo, char *str);
 int				ft_exit(t_in *in);
 int				ft_detach_threads(t_in *in);
@@ -65,5 +66,6 @@ int				ft_join_threads(t_in *in);
 int				ft_init(t_in *in);
 int				ft_create_threads(t_in *in);
 int				ft_check_dead(t_philo *philo);
+int				ft_strcmp(char *s1, char *s2);
 
 #endif
